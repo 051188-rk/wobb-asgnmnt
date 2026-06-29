@@ -1,28 +1,39 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import type { Platform } from "@/types";
 import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
 import { ProfileList } from "@/components/ProfileList";
 import { extractProfiles, filterProfiles } from "@/utils/dataHelpers";
+import { motion } from "framer-motion";
+import { useAppStore } from "@/store/useAppStore";
 
 export function SearchPage() {
-  const [platform, setPlatform] = useState<Platform>("instagram");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [clickCount, setClickCount] = useState(0);
+  const platform = useAppStore((state) => state.platform);
+  const searchQuery = useAppStore((state) => state.searchQuery);
+  const clickCount = useAppStore((state) => state.clickCount);
+  
+  const setPlatform = useAppStore((state) => state.setPlatform);
+  const setSearchQuery = useAppStore((state) => state.setSearchQuery);
+  const incrementClickCount = useAppStore((state) => state.incrementClickCount);
 
   const allProfiles = extractProfiles(platform);
   const filtered = filterProfiles(allProfiles, searchQuery);
 
   const handleProfileClick = (username: string) => {
-    setClickCount(clickCount + 1);
-    console.log("Clicked profile:", username, "total clicks:", clickCount);
+    incrementClickCount();
+    console.log("Clicked profile:", username, "total clicks:", clickCount + 1);
   };
 
   return (
     <Layout title="Find Influencers">
-      <p className="text-gray-500 mb-4 text-sm">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.3 }}
+        className="text-black mb-6 text-sm font-medium"
+      >
         Browse top creators across social platforms
-      </p>
+      </motion.p>
 
       <PlatformFilter
         selected={platform}
@@ -34,9 +45,14 @@ export function SearchPage() {
         onSearchChange={setSearchQuery}
       />
 
-      <p className="text-xs text-gray-400 mb-2">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.3 }}
+        className="text-xs text-black mb-4 font-medium"
+      >
         Showing {filtered.length} of {allProfiles.length} on {platform}
-      </p>
+      </motion.p>
 
       <ProfileList
         profiles={filtered}
