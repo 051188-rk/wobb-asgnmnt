@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import type { Platform, UserProfileSummary } from "@/types";
 import { VerifiedBadge } from "./VerifiedBadge";
+import { motion } from "framer-motion";
+import { FiPlus } from "react-icons/fi";
 
 interface ProfileCardProps {
   profile: UserProfileSummary;
@@ -29,29 +31,39 @@ export function ProfileCard({
   };
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
       onClick={handleClick}
-      className="flex items-center gap-3 p-3 border border-gray-300 mb-2 cursor-pointer hover:bg-gray-50 w-[700px]"
+      className="flex items-center gap-3 p-4 border-2 border-black mb-3 cursor-pointer hover:bg-black hover:text-white w-[700px] transition-colors duration-200"
       data-search={searchQuery}
     >
-      <img src={profile.picture} className="w-12 h-12 rounded-full" />
+      <motion.img
+        src={profile.picture}
+        className="w-12 h-12 rounded-full border border-black"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.2 }}
+      />
       <div className="text-left flex-1">
         <div className="font-bold">
           @{profile.username}
           <VerifiedBadge verified={profile.is_verified} />
         </div>
-        <div className="text-sm text-gray-600">{profile.fullname}</div>
+        <div className="text-sm">{profile.fullname}</div>
         <div className="text-sm">{formatFollowersLocal(profile.followers)}</div>
       </div>
-      {/* TODO: candidates must implement Add to List feature */}
-      {/* TODO: candidates must implement Add to List feature */}
-      <button
+      <motion.button
         disabled
-        className="px-3 py-1 bg-gray-300 text-gray-500 text-sm rounded cursor-not-allowed"
+        className="px-3 py-2 bg-black text-white text-sm rounded border border-black flex items-center gap-2 cursor-not-allowed opacity-50"
+        whileHover={{ scale: 1.05 }}
+        transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
       >
-        Add to List
-      </button>
-    </div>
+        <FiPlus size={16} />
+        Add
+      </motion.button>
+    </motion.div>
   );
 }
