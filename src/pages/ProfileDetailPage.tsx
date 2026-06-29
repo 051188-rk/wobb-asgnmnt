@@ -137,13 +137,13 @@ export function ProfileDetailPage() {
               transition={{ delay: 0.3, duration: 0.3 }}
               className="mt-6 grid grid-cols-2 gap-3 text-sm"
             >
-              <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+              <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                 <div className="text-black text-xs font-medium">Followers</div>
                 <div className="font-bold text-lg">
                   {formatFollowersDetail(user.followers)}
                 </div>
               </div>
-              <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+              <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                 <div className="text-black text-xs font-medium">Engagement Rate</div>
                 <div className="font-bold text-lg">
                   {user.engagement_rate !== undefined
@@ -152,13 +152,13 @@ export function ProfileDetailPage() {
                 </div>
               </div>
               {user.posts_count !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                   <div className="text-black text-xs font-medium">Posts</div>
                   <div className="font-bold text-lg">{user.posts_count}</div>
                 </div>
               )}
               {user.avg_likes !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                   <div className="text-black text-xs font-medium">Avg Likes</div>
                   <div className="font-bold text-lg">
                     {formatFollowersDetail(user.avg_likes)}
@@ -166,13 +166,13 @@ export function ProfileDetailPage() {
                 </div>
               )}
               {user.avg_comments !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                   <div className="text-black text-xs font-medium">Avg Comments</div>
                   <div className="font-bold text-lg">{user.avg_comments}</div>
                 </div>
               )}
               {user.avg_views !== undefined && user.avg_views > 0 && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                   <div className="text-black text-xs font-medium">Avg Views</div>
                   <div className="font-bold text-lg">
                     {formatFollowersDetail(user.avg_views)}
@@ -180,7 +180,7 @@ export function ProfileDetailPage() {
                 </div>
               )}
               {user.engagements !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:bg-black hover:text-white transition-all">
+                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
                   <div className="text-black text-xs font-medium">Engagements</div>
                   <div className="font-bold text-lg">
                     {formatEngagementRate(user.engagement_rate)}
@@ -195,7 +195,7 @@ export function ProfileDetailPage() {
                 target="_blank"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
-                className="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-black text-white rounded border-2 border-black hover:bg-white hover:text-black transition-all font-medium"
+                className="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-black text-white rounded border-2 border-black hover:border-blue-600 transition-all font-medium"
               >
                 View on platform <FiArrowRight size={16} />
               </motion.a>
@@ -203,9 +203,9 @@ export function ProfileDetailPage() {
 
             <motion.button
               disabled
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.05, y: -2 }}
               transition={{ duration: 0.2 }}
-              className="block mt-4 px-4 py-2 bg-black text-white rounded border-2 border-black cursor-not-allowed opacity-50 font-medium"
+              className="custom-button block mt-4"
             >
               Add to List
             </motion.button>

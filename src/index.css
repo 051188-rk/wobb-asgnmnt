@@ -92,3 +92,33 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+/* Custom Button Styling */
+.custom-button {
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #000000;
+  padding: 0.6em 1.6em;
+  border-radius: 50em;
+  border: 3px solid #000000;
+  box-shadow: 0px 4px #4d4d4d;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.custom-button:active {
+  position: relative;
+  top: 4px;
+  border: 3px solid #666666;
+  box-shadow: 0px 0px;
+}
+
+.custom-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

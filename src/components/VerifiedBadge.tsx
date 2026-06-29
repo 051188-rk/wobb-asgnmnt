@@ -14,7 +14,7 @@ export function VerifiedBadge({ verified }: VerifiedBadgeProps) {
       transition={{ duration: 0.3 }}
       className="ml-1 inline-flex"
     >
-      <MdVerified size={16} className="text-black" />
+      <MdVerified size={16} className="text-blue-600" />
     </motion.span>
   );
 }

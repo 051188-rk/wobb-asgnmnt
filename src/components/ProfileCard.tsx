@@ -37,7 +37,7 @@ export function ProfileCard({
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
       onClick={handleClick}
-      className="flex items-center gap-3 p-4 border-2 border-black mb-3 cursor-pointer hover:bg-black hover:text-white w-[700px] transition-colors duration-200"
+      className="flex items-center gap-3 p-4 border-2 border-black mb-3 cursor-pointer hover:border-blue-600 w-[700px] transition-all duration-200"
       data-search={searchQuery}
     >
       <motion.img
@@ -56,8 +56,8 @@ export function ProfileCard({
       </div>
       <motion.button
         disabled
-        className="px-3 py-2 bg-black text-white text-sm rounded border border-black flex items-center gap-2 cursor-not-allowed opacity-50"
-        whileHover={{ scale: 1.05 }}
+        className="custom-button"
+        whileHover={{ scale: 1.05, y: -2 }}
         transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
       >
