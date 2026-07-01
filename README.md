@@ -2,6 +2,7 @@
 
 A starter influencer search application built with **React**, **TypeScript**, **Vite**, and **Tailwind CSS**. This project is intentionally left in a rough-but-working state for candidates to improve.
 
+
 ## Getting Started
 
 ```bash
@@ -11,91 +12,55 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) to view the app.
 
-## What's Included
+## 🚀 Live Deployment
 
-- **Search / Dashboard** — filter influencers by platform (Instagram, YouTube, TikTok) and search by username or full name
-- **Profile Details** — click a profile to view extended data loaded from individual JSON files
-- **Routing** — `react-router-dom` with `/` (search) and `/profile/:username` (details)
+The application is deployed live on Vercel: **[vibecheck (Live Web Application)](https://wobb-asgnmnt-six.vercel.app/)**
 
-Sample data lives in:
+---
 
-- `src/assets/data/search/` — platform search results (10 profiles each)
-- `src/assets/data/profiles/` — detailed profile JSON per username
+## 🛠️ Refactoring & Architectural Summary
 
-## How to Submit
+This version of **vibecheck** is optimized for speed, maintainability, and clean state sharing. Here is a breakdown of what was built:
 
-1. **Download or clone** this starter project to your machine.
-2. **Create a new repository** on your own GitHub account. Do not fork the original assignment repo — push your work to a repo you own.
-3. Complete the tasks below and push your changes to that repository.
-4. **Share the public GitHub repository URL** with us as your submission.
+### 1. What Changed
+- **Persistent Zustand Store**: Replaced React Context stubs with Zustand. Selections are persisted in `localStorage` using `persist` and custom `partialize` keys (so transient searches/cache details don't overload storage).
+- **Selection Drawer & Sharing Modes**: Designed a right-hand sliding menu using Framer Motion to aggregate campaign sizes, clear lists, download CSV sheets, print plaintext reports, copy handles, and natively redirect links directly to **WhatsApp** and **Twitter/X**.
+- **Flat B&W Styling**: Rewrote global styling variables to create a high-contrast black-and-white layout. Enforced zero-rounding (`border-radius: 0px !important`) to strip away typical curved layouts for a sharp, border-driven aesthetic. Centered all headers, dashboard elements, and detail summaries.
+- **Pulsing Skeletons & Splash Intro**: Added flat, pulsing skeleton placeholders (`ProfileCardSkeleton`) that simulate network loads when shifting tabs, and created a 3-second loader splash screen on initial boot.
+- **Bug Fixes**:
+  - Resolved case-sensitivity on search inputs.
+  - Fixed calculations on the Detail view showing the correct engagement rate percentage (multiplied by 100 instead of 10000) and correct engagement counts (instead of duplicating engagement rates).
 
-### Deadline (strict)
+### 2. Libraries Added
+To support automated test evaluation:
+- `vitest` (Lightweight Vite-native test runner)
+- `jsdom` (Mock browser environment)
+- `@testing-library/react` & `@testing-library/dom` (For rendering and querying React components)
 
-- **Due:** **2 July 2026, 2:00 PM IST** (Indian Standard Time, UTC+5:30)
-- **Any git commits made after this deadline will disqualify your submission.** We will only consider the repository state as of the deadline; late commits will not be reviewed.
-- Make sure your final work is pushed **before** the cutoff.
+### 3. AI Tooling & Attributions
+This revamp was accelerated using specialized AI assistants:
+- **Antigravity IDE**: Conducted the UI restructuring, constructed the grid templates, set up the Zustand slice layers, and integrated the persistent selections drawer.
+- **OpenCode (Gemini API)** & **ChatGPT**: Utilized for prompt engineering, logic refinement, and debugging Vite bundler config paths.
+- **Google Veo**: Generated the custom `loader.gif` animation displayed on the initial splash screen.
+- **Devin Desktop** & **GitHub Copilot**: Leveraged to locate the detail statistics bugs and verify initial syntax errors.
 
-## AI Usage
+---
 
-You may use any AI tools (Cursor, ChatGPT, Claude, GitHub Copilot, etc.). We are evaluating your final solution and engineering decisions.
+## 💡 Assumptions, Trade-offs, & Next Steps
 
-## Your Tasks
+### Assumptions
+- **Zustand Payload Size**: Instead of keeping only `user_id` inside `localStorage` (which would require fetching profile details from scratch on every page load), we store complete profile summary snapshots (`user_id`, `username`, `fullname`, `picture`, `followers`, `platform`, `is_verified`). This keeps initial loads instant and fits comfortably in a ~1.5KB localStorage payload.
+- **Single-Color Accent**: Assumed a clean, bright green (`#22c55e`) was ideal as the single highlight color to pop cleanly against the absolute black backgrounds.
 
-Complete the following as part of your submission:
+### Trade-offs
+- **Plaintext vs PDF Generators**: For the PDF export option, we generate a beautifully structured plaintext file report (`.txt`) which is universally compatible and natively printable to PDF from any system browser or editor. This avoids adding heavy client-side canvas or PDF libraries (like `jspdf`), keeping our bundle footprint small.
+- **Single-Worker Tests**: Configured Vitest to run sequentially (`--no-file-parallelism --maxWorkers=1`) inside `package.json`. This slightly extends test execution time but guarantees absolute stability on standard/remote servers by avoiding child process memory exhaustion.
 
-1. **Find and fix all bugs and quality issues** — the codebase contains intentional bugs and quality issues. Identify and resolve them.
-
-2. **Completely redesign the UI/UX** — replace the basic layout with a polished, modern interface. Focus on usability, visual hierarchy, and delight.
-
-3. **Replace React Context with Zustand** — when you implement state management for the selected list, use [Zustand](https://github.com/pmndrs/zustand) instead of React Context.
-
-4. **Implement "Select profile & Add to List"** — the disabled "Add to List" button is a stub. Build the full feature:
-   - Select / add profiles to a persistent list
-   - View and manage the selected list
-   - Handle duplicates appropriately
-
-5. **Improve code quality and project structure** — refactor as needed, add proper types, and follow React best practices.
-
-6. **Optimize performance** — apply sensible optimizations where appropriate.
-
-7. **Use any libraries you need** — you are not limited to the current stack. Choose tools that help you deliver a great result (UI kits, state managers, testing libraries, etc.).
-
-## Scripts
-
-| Command        | Description              |
-| -------------- | ------------------------ |
-| `npm run dev`  | Start development server |
-| `npm run build`| Production build         |
-| `npm run lint` | Run ESLint               |
-
-## Submission Notes & Refactoring Summary
-
-I have completed all the tasks of this assignment, delivering a production-ready, clean, and highly optimized version of the Influencer Search platform.
-
-### 1. Key Features & Implementations
-
-- **Persistent Zustand Store**: Replaced React state/context stubs with a robust Zustand state manager using `persist` middleware. State persistence is optimized using the `partialize` filter, ensuring that only the `selectedProfiles` array is serialized to `localStorage` (transient searches and cache maps are excluded to keep storage limits small).
-- **"Select Profile & Add to List" Drawer**: Developed a right-aligned sliding panel (`src/components/SelectedListDrawer.tsx`) using `framer-motion` to view selections. It displays influencer details, calculates the combined reach/follower metric dynamically, provides single trash/remove triggers, and includes a "Clear All" action. It supports exporting selections as CSV spreadsheets, plain text reports, system sharing sheets, or sharing directly to WhatsApp and Twitter/X.
-- **Responsive Card Grid Layout**: Changed the list format from a single column of static `w-[700px]` rows into a responsive, flexible grid that fits on mobile, tablet, and desktop viewports seamlessly.
-- **Premium Black & White Redesign**: Rewrote stylesheets and markup to construct a high-contrast black-and-white theme (`#000000` and `#ffffff`) with sharp corners (flat straight edges), green (`#22c55e`) selection badge details, and center-aligned page title and creator details layouts.
-
-### 2. Bugs & Quality Fixes
-
-- **Case-insensitive Search**: Corrected a bug in `src/utils/dataHelpers.ts` where `matchUsername` was case-sensitive (e.g. searching "mr" didn't find "mrbeast" if casing changed). It now uses `toLowerCase()` matching.
-- **Detail Stats Cards Bug**: Fixed two errors in the influencer statistics section of `src/pages/ProfileDetailPage.tsx`:
-  1. The **Engagement Rate** card previously multiplied the database float by `10000` (which outputted `142.50%` instead of `1.43%`). It now uses the `formatEngagementRate` utility which correctly scales by `100`.
-  2. The **Engagements** card was printing the *engagement rate* float formatted as a percentage instead of formatting the actual *engagements count* (e.g., `1.32M` engagements). It now correctly renders the `user.engagements` value.
-- **React Icons Integration**: Used brand-specific vectors (`FaInstagram`, `FaYoutube`, `FaTiktok`) instead of standard strings to make the platform indicators feel rich and high-end.
-
-### 3. Performance Optimizations
-
-- **Fine-grained Subscriptions**: Selected state slices individually (`useAppStore(state => state.field)`) to prevent unnecessary component re-renders when unrelated store properties change.
-- **Mount & Animate Optimization**: Scaled transitions with `AnimatePresence` and staggered framer-motion entry delays using capped sequence timings (`idx * 0.04`).
-
-### 4. Assumptions & Trade-offs
-
-- **Selected Profile Payload**: Rather than storing only `user_id` inside `localStorage` (which would require re-loading profile JSON detail sheets on startup), the store tracks summary structures (`user_id`, `username`, `fullname`, `picture`, `followers`, `platform`, `is_verified`). This keeps page loads instant and local storage small (~1KB max).
-- **Mock Actions**: Action triggers (such as clicking the drawer's "Export List" button) alert users dynamically with campaign reach summaries.
+### Remaining Improvements
+- **Advanced Query Filters**: Implement numerical range sliders to filter influencers by follower counts, engagement rate benchmarks, or specific locations.
+- **CSV Import / Campaign Merge**: Allow loading previously exported campaign CSVs back into the app state to update lists on the fly.
+- **Real-Time API Syncing**: Swap the static JSON loader modules with live social network integrations.
 
 Good luck!
+
 
