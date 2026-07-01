@@ -60,45 +60,27 @@ export function ProfileCard({
     }
   };
 
-  const getPlatformClass = () => {
-    switch (platform) {
-      case "instagram":
-        return "bg-pink-500/15 border-pink-500/35 text-pink-400";
-      case "youtube":
-        return "bg-red-500/15 border-red-500/35 text-red-400";
-      case "tiktok":
-        return "bg-cyan-500/15 border-cyan-500/35 text-cyan-400";
-      default:
-        return "bg-zinc-800 border-zinc-700 text-zinc-300";
-    }
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
       onClick={handleClick}
-      className="p-5 bg-zinc-900/40 border border-zinc-800 hover:border-zinc-700 rounded-2xl flex flex-col justify-between hover:shadow-xl hover:shadow-indigo-500/5 transition-all duration-300 group cursor-pointer relative overflow-hidden backdrop-blur-sm w-full h-[230px]"
+      className="p-5 bg-black border border-white hover:border-green-500 flex flex-col justify-between transition-all duration-200 group cursor-pointer relative w-full h-[230px]"
       data-search={searchQuery}
     >
-      {/* Top Banner Sparkles or Gradients */}
-      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-zinc-800 to-transparent group-hover:via-indigo-500/30 transition-all duration-500" />
-
       {/* Row 1: Platform & Avatar */}
       <div className="flex justify-between items-start">
         {/* Avatar */}
         <div className="relative">
-          <motion.img
+          <img
             src={profile.picture}
             alt={profile.fullname}
-            className="w-14 h-14 rounded-full border-2 border-zinc-800 group-hover:border-indigo-500/40 object-cover"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
+            className="w-14 h-14 border border-white object-cover"
           />
-          <div className="absolute -bottom-1 -right-1 bg-zinc-950 p-0.5 rounded-full border border-zinc-800">
-            <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] ${getPlatformClass()}`}>
+          <div className="absolute -bottom-1 -right-1 bg-black p-0.5 border border-white">
+            <span className="h-5 w-5 flex items-center justify-center text-[10px] text-white">
               {getPlatformIcon()}
             </span>
           </div>
@@ -107,18 +89,18 @@ export function ProfileCard({
         {/* Selected List Action Button */}
         <motion.button
           onClick={handleToggleList}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-200 cursor-pointer ${
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className={`flex items-center gap-1 px-3 py-1.5 text-xs font-bold border transition-all duration-150 cursor-pointer ${
             isSelected
-              ? "bg-indigo-600/10 border-indigo-500/30 text-indigo-400 hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400 hover:content-['Remove']"
-              : "bg-zinc-850 hover:bg-zinc-800 border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-zinc-100"
+              ? "bg-green-500 border-green-500 text-black font-extrabold hover:bg-red-500 hover:border-red-500 hover:text-black"
+              : "bg-black border-white text-white hover:bg-white hover:text-black"
           }`}
           title={isSelected ? "Remove from list" : "Add to list"}
         >
           {isSelected ? (
             <>
-              <FiCheck size={14} className="animate-scaleIn" />
+              <FiCheck size={14} />
               <span>Added</span>
             </>
           ) : (
@@ -132,7 +114,7 @@ export function ProfileCard({
 
       {/* Row 2: Names and Info */}
       <div className="text-left mt-3">
-        <h3 className="font-bold text-zinc-100 flex items-center gap-1 group-hover:text-indigo-400 transition-colors text-base truncate">
+        <h3 className="font-bold text-white flex items-center gap-1 group-hover:text-green-500 transition-colors text-base truncate">
           @{profile.username}
           <VerifiedBadge verified={profile.is_verified} />
         </h3>
@@ -140,9 +122,9 @@ export function ProfileCard({
       </div>
 
       {/* Row 3: Follower Reach Stat */}
-      <div className="border-t border-zinc-850/80 pt-3 mt-3 flex justify-between items-center text-[11px] text-zinc-500 font-medium">
-        <span>Reach / Followers</span>
-        <span className="text-indigo-400 font-bold text-sm">
+      <div className="border-t border-white/20 pt-3 mt-3 flex justify-between items-center text-[11px] text-zinc-500 font-bold uppercase">
+        <span>Reach</span>
+        <span className="text-green-500 font-extrabold text-sm">
           {formatFollowers(profile.followers)}
         </span>
       </div>

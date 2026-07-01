@@ -32,18 +32,9 @@ export function PlatformFilter({
 
   const getPlatformClass = (platform: Platform) => {
     if (selected === platform) {
-      switch (platform) {
-        case "instagram":
-          return "bg-gradient-to-r from-pink-500 to-rose-500 text-white border-transparent shadow-lg shadow-pink-500/20";
-        case "youtube":
-          return "bg-gradient-to-r from-red-600 to-rose-600 text-white border-transparent shadow-lg shadow-red-500/20";
-        case "tiktok":
-          return "bg-gradient-to-r from-cyan-500 to-teal-500 text-white border-transparent shadow-lg shadow-cyan-500/20";
-        default:
-          return "bg-indigo-600 text-white border-transparent";
-      }
+      return "bg-green-500 text-black border-green-500 font-extrabold";
     }
-    return "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300 hover:text-zinc-100 hover:bg-zinc-850";
+    return "bg-black border-white text-white hover:bg-zinc-900";
   };
 
   return (
@@ -63,9 +54,9 @@ export function PlatformFilter({
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: idx * 0.08, duration: 0.3 }}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className={`px-5 py-2.5 rounded-xl font-semibold text-sm border flex items-center gap-2 transition-all duration-200 cursor-pointer ${getPlatformClass(p)}`}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className={`px-5 py-2.5 font-bold text-sm border uppercase flex items-center gap-2 transition-all duration-200 cursor-pointer ${getPlatformClass(p)}`}
           >
             {getPlatformIcon(p)}
             <span>{getPlatformLabel(p)}</span>
@@ -84,7 +75,7 @@ export function PlatformFilter({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.3 }}
-          className="w-full pl-11 pr-4 py-3 bg-zinc-900 border border-zinc-800 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 text-zinc-100 placeholder-zinc-500 rounded-2xl focus:outline-none transition-all duration-200"
+          className="w-full pl-11 pr-4 py-3 bg-black border border-white focus:border-green-500 focus:ring-0 text-white placeholder-zinc-500 focus:outline-none transition-all duration-200"
         />
       </div>
     </motion.div>

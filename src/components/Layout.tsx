@@ -15,31 +15,31 @@ export function Layout({ children, title }: LayoutProps) {
   const selectedCount = useAppStore((state) => state.selectedProfiles.length);
 
   return (
-    <div className="flex flex-col min-h-screen w-full text-zinc-200 bg-zinc-950">
+    <div className="flex flex-col min-h-screen w-full text-white bg-black">
       {/* Premium Header */}
       <motion.header
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="sticky top-0 z-40 w-full border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md px-6 py-4 flex justify-between items-center"
+        className="sticky top-0 z-40 w-full border-b border-white bg-black px-6 py-4 flex justify-between items-center"
       >
         <Link
           to="/"
-          className="text-lg font-bold text-zinc-100 flex items-center gap-2 hover:text-indigo-400 transition-colors"
+          className="text-lg font-bold text-white flex items-center gap-2 hover:text-green-500 transition-colors"
         >
-          <FiHome size={20} className="text-indigo-500" />
+          <FiHome size={20} className="text-white" />
           <span>VibeInflux</span>
         </Link>
 
         {/* View List Toggle Button */}
         <button
           onClick={() => setDrawerOpen(true)}
-          className="relative flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-850 border border-zinc-800 hover:border-zinc-700 text-sm font-medium transition-all duration-200 group cursor-pointer"
+          className="relative flex items-center gap-2 px-4 py-2 bg-black hover:bg-zinc-900 border border-white text-sm font-semibold transition-all duration-200 group cursor-pointer"
         >
-          <FiUsers className="text-zinc-400 group-hover:text-indigo-400 transition-colors" size={18} />
+          <FiUsers className="text-white group-hover:text-green-500 transition-colors" size={18} />
           <span className="hidden sm:inline">Saved List</span>
           {selectedCount > 0 && (
-            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-indigo-600 px-1.5 text-[10px] font-bold text-white ring-2 ring-zinc-900">
+            <span className="flex h-5 min-w-[20px] items-center justify-center bg-green-500 px-1.5 text-[10px] font-extrabold text-black border border-black">
               {selectedCount}
             </span>
           )}
@@ -50,12 +50,12 @@ export function Layout({ children, title }: LayoutProps) {
       <main className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
         {title && (
           <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.3 }}
-            className="mb-8 text-left"
+            className="mb-8 text-center"
           >
-            <h1 className="text-3xl font-extrabold text-zinc-100 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-white tracking-tight uppercase border-b border-white pb-4 inline-block">
               {title}
             </h1>
           </motion.div>

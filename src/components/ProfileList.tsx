@@ -28,12 +28,12 @@ export function ProfileList({
             transition={{ duration: 0.3 }}
             className="flex flex-col items-center justify-center py-20 text-center space-y-4"
           >
-            <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 shadow-inner">
+            <div className="w-16 h-16 border border-white flex items-center justify-center text-white">
               <FiSearch size={26} />
             </div>
             <div>
-              <h3 className="text-base font-semibold text-zinc-300">No influencers found</h3>
-              <p className="text-xs text-zinc-500 max-w-[280px] mt-1.5">
+              <h3 className="text-base font-bold text-white uppercase">No creators found</h3>
+              <p className="text-xs text-zinc-400 max-w-[280px] mt-2">
                 We couldn't find any profiles matching your search or filters. Try adjusting your search query.
               </p>
             </div>
@@ -50,8 +50,8 @@ export function ProfileList({
             {profiles.map((profile, idx) => (
               <motion.div
                 key={profile.user_id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ delay: Math.min(idx * 0.04, 0.4), duration: 0.3 }}
                 className="flex justify-center"
               >

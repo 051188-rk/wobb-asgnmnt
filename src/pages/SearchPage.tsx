@@ -29,9 +29,9 @@ export function SearchPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.3 }}
-        className="text-zinc-400 mb-8 text-sm font-medium -mt-5"
+        className="text-zinc-400 mb-8 text-sm font-bold text-center uppercase tracking-wide -mt-5"
       >
-        Browse and discover top creators across social media networks.
+        Discover top creators across social media networks.
       </motion.p>
 
       <PlatformFilter
@@ -48,13 +48,13 @@ export function SearchPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="w-full flex justify-between items-center text-xs text-zinc-500 mb-6 font-semibold uppercase tracking-wider border-b border-zinc-900 pb-3"
+        className="w-full flex justify-between items-center text-[10px] text-zinc-500 mb-6 font-bold uppercase tracking-wider border-b border-white/20 pb-3"
       >
         <span>
           Showing {filtered.length} of {allProfiles.length} on {platform}
         </span>
-        <span className="text-zinc-600 normal-case">
-          Clicks: {clickCount}
+        <span className="text-zinc-500">
+          Clicks: <span className="text-green-500 font-extrabold">{clickCount}</span>
         </span>
       </motion.div>
 

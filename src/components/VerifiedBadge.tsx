@@ -15,7 +15,7 @@ export function VerifiedBadge({ verified }: VerifiedBadgeProps) {
       className="inline-flex align-middle ml-1"
       title="Verified Account"
     >
-      <MdVerified size={16} className="text-sky-400" />
+      <MdVerified size={16} className="text-green-500" />
     </motion.span>
   );
 }
