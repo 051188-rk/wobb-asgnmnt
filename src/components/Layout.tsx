@@ -25,10 +25,12 @@ export function Layout({ children, title }: LayoutProps) {
       >
         <Link
           to="/"
-          className="text-lg font-bold text-white flex items-center gap-2 hover:text-green-500 transition-colors"
+          className="text-lg text-white flex items-center gap-2 hover:text-green-500 transition-colors"
         >
-          <FiHome size={20} className="text-white" />
-          <span>VibeInflux</span>
+          <div className="flex items-baseline leading-none select-none">
+            <span className="cursive-brand text-4xl text-green-500 lowercase">vibe</span>
+            <span className="font-extrabold uppercase tracking-widest text-xl ml-0.5 text-white">check</span>
+          </div>
         </Link>
 
         {/* View List Toggle Button */}
