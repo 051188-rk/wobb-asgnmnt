@@ -75,9 +75,9 @@ I have completed all the tasks of this assignment, delivering a production-ready
 ### 1. Key Features & Implementations
 
 - **Persistent Zustand Store**: Replaced React state/context stubs with a robust Zustand state manager using `persist` middleware. State persistence is optimized using the `partialize` filter, ensuring that only the `selectedProfiles` array is serialized to `localStorage` (transient searches and cache maps are excluded to keep storage limits small).
-- **"Select Profile & Add to List" Drawer**: Developed a right-aligned sliding panel (`src/components/SelectedListDrawer.tsx`) using `framer-motion` to view selections. It displays influencer details, calculates the combined reach/follower metric dynamically, provides single trash/remove triggers, and includes a "Clear All" action.
+- **"Select Profile & Add to List" Drawer**: Developed a right-aligned sliding panel (`src/components/SelectedListDrawer.tsx`) using `framer-motion` to view selections. It displays influencer details, calculates the combined reach/follower metric dynamically, provides single trash/remove triggers, and includes a "Clear All" action. It supports exporting selections as CSV spreadsheets, plain text reports, system sharing sheets, or sharing directly to WhatsApp and Twitter/X.
 - **Responsive Card Grid Layout**: Changed the list format from a single column of static `w-[700px]` rows into a responsive, flexible grid that fits on mobile, tablet, and desktop viewports seamlessly.
-- **Premium Dark UI Redesign**: Rewrote stylesheets and markup to construct a cohesive dark design system (`bg-zinc-950 text-zinc-200`) with subtle radial gradients, interactive hover card states, custom badges for platforms (Instagram, YouTube, TikTok) with brand colors/icons, and smooth visual transitions.
+- **Premium Black & White Redesign**: Rewrote stylesheets and markup to construct a high-contrast black-and-white theme (`#000000` and `#ffffff`) with sharp corners (flat straight edges), green (`#22c55e`) selection badge details, and center-aligned page title and creator details layouts.
 
 ### 2. Bugs & Quality Fixes
 

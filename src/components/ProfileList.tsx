@@ -1,5 +1,6 @@
 import type { Platform, UserProfileSummary } from "@/types";
 import { ProfileCard } from "./ProfileCard";
+import { ProfileCardSkeleton } from "./ProfileCardSkeleton";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiSearch } from "react-icons/fi";
 
@@ -8,6 +9,7 @@ interface ProfileListProps {
   platform: Platform;
   searchQuery: string;
   onProfileClick: (username: string) => void;
+  isLoading?: boolean;
 }
 
 export function ProfileList({
@@ -15,7 +17,18 @@ export function ProfileList({
   platform,
   searchQuery,
   onProfileClick,
+  isLoading = false,
 }: ProfileListProps) {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <ProfileCardSkeleton key={i} />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col items-center">
       <AnimatePresence mode="wait">

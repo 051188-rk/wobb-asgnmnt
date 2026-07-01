@@ -16,6 +16,49 @@ function formatFollowersDetail(count: number) {
   return String(count);
 }
 
+function ProfileDetailSkeleton() {
+  return (
+    <div className="w-full bg-black border border-white p-6 md:p-10 flex flex-col items-center text-center animate-pulse">
+      {/* Picture */}
+      <div className="w-24 h-24 md:w-28 md:h-28 bg-zinc-900 border border-zinc-800" />
+
+      {/* Details */}
+      <div className="w-full mt-6 flex flex-col items-center space-y-3">
+        <div className="h-6 w-48 bg-zinc-900" />
+        <div className="h-4 w-32 bg-zinc-900" />
+        
+        <div className="flex gap-2 items-center justify-center mt-3">
+          <div className="h-5 w-20 bg-zinc-900" />
+          <div className="h-5 w-24 bg-zinc-900" />
+        </div>
+
+        {/* Description */}
+        <div className="w-full max-w-xl border-t border-white/20 pt-6 mt-6 space-y-2">
+          <div className="h-3 w-full bg-zinc-900" />
+          <div className="h-3 w-5/6 bg-zinc-900 mx-auto" />
+          <div className="h-3 w-2/3 bg-zinc-900 mx-auto" />
+        </div>
+
+        {/* Stats Grid */}
+        <div className="mt-8 w-full max-w-3xl grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="bg-black border border-white p-4 h-20 flex flex-col justify-between items-center">
+              <div className="h-2.5 w-14 bg-zinc-900" />
+              <div className="h-5 w-16 bg-zinc-900 mt-2" />
+            </div>
+          ))}
+        </div>
+
+        {/* Buttons */}
+        <div className="mt-8 w-full max-w-xl flex flex-col sm:flex-row gap-4 border-t border-white/20 pt-6">
+          <div className="h-11 w-full bg-zinc-900" />
+          <div className="h-11 w-full bg-zinc-900" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ProfileDetailPage() {
   const { username } = useParams<{ username: string }>();
   const [searchParams] = useSearchParams();
@@ -67,14 +110,7 @@ export function ProfileDetailPage() {
   if (!loaded) {
     return (
       <Layout title={`@${username}`}>
-        <div className="flex flex-col items-center justify-center py-32 space-y-4">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-            className="w-10 h-10 border border-white border-t-transparent"
-          />
-          <p className="text-zinc-400 text-xs font-bold uppercase tracking-wide animate-pulse">Loading profile data...</p>
-        </div>
+        <ProfileDetailSkeleton />
       </Layout>
     );
   }

@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import type { Platform } from "@/types";
 import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
@@ -14,6 +15,16 @@ export function SearchPage() {
   const setPlatform = useAppStore((state) => state.setPlatform);
   const setSearchQuery = useAppStore((state) => state.setSearchQuery);
   const incrementClickCount = useAppStore((state) => state.incrementClickCount);
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 450);
+    return () => clearTimeout(timer);
+  }, [platform]);
 
   const allProfiles = extractProfiles(platform);
   const filtered = filterProfiles(allProfiles, searchQuery);
@@ -63,6 +74,7 @@ export function SearchPage() {
         platform={platform}
         searchQuery={searchQuery}
         onProfileClick={handleProfileClick}
+        isLoading={isLoading}
       />
     </Layout>
   );
