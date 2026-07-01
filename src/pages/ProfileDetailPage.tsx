@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import { VerifiedBadge } from "@/components/VerifiedBadge";
-import type { FullUserProfile, ProfileDetailResponse } from "@/types";
+import type { FullUserProfile, ProfileDetailResponse, Platform } from "@/types";
 import { formatEngagementRate } from "@/utils/formatters";
 import { loadProfileByUsername } from "@/utils/profileLoader";
 import { motion } from "framer-motion";
-import { FiArrowRight, FiArrowLeft } from "react-icons/fi";
+import { FiArrowRight, FiArrowLeft, FiPlus, FiCheck, FiBarChart2, FiTv, FiMessageSquare, FiHeart, FiEye, FiThumbsUp, FiUsers } from "react-icons/fi";
+import { FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
 import { useAppStore } from "@/store/useAppStore";
 
 function formatFollowersDetail(count: number) {
@@ -18,14 +19,16 @@ function formatFollowersDetail(count: number) {
 export function ProfileDetailPage() {
   const { username } = useParams<{ username: string }>();
   const [searchParams] = useSearchParams();
-  const platform = searchParams.get("platform") || "unknown";
-  const [profileData, setProfileData] = useState<ProfileDetailResponse | null>(
-    null
-  );
+  const platform = (searchParams.get("platform") || "instagram") as Platform;
+  
+  const [profileData, setProfileData] = useState<ProfileDetailResponse | null>(null);
   const [loaded, setLoaded] = useState(false);
 
   const cacheProfile = useAppStore((state) => state.cacheProfile);
   const getCachedProfile = useAppStore((state) => state.getCachedProfile);
+  const isSelected = useAppStore((state) => state.isProfileSelected(profileData?.data?.user_profile?.user_id || ""));
+  const addProfileToList = useAppStore((state) => state.addProfileToList);
+  const removeProfileFromList = useAppStore((state) => state.removeProfileFromList);
 
   useEffect(() => {
     if (!username) return;
@@ -40,7 +43,9 @@ export function ProfileDetailPage() {
 
     // Load profile and cache it
     loadProfileByUsername(username).then((data) => {
-      cacheProfile(username, data);
+      if (data) {
+        cacheProfile(username, data);
+      }
       setProfileData(data);
       setLoaded(true);
     });
@@ -49,10 +54,12 @@ export function ProfileDetailPage() {
   if (!username) {
     return (
       <Layout>
-        <p className="text-black">Invalid profile</p>
-        <Link to="/" className="text-black underline flex items-center gap-1 mt-2">
-          <FiArrowLeft size={16} /> Back
-        </Link>
+        <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+          <p className="text-zinc-400">Invalid profile username specified.</p>
+          <Link to="/" className="secondary-button">
+            <FiArrowLeft size={16} /> Back to search
+          </Link>
+        </div>
       </Layout>
     );
   }
@@ -60,13 +67,14 @@ export function ProfileDetailPage() {
   if (!loaded) {
     return (
       <Layout title={`@${username}`}>
-        <motion.p
-          animate={{ opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="text-black font-medium"
-        >
-          Loading...
-        </motion.p>
+        <div className="flex flex-col items-center justify-center py-32 space-y-4">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+            className="w-10 h-10 border-2 border-indigo-500 border-t-transparent rounded-full"
+          />
+          <p className="text-zinc-500 text-sm font-semibold animate-pulse">Loading profile data...</p>
+        </div>
       </Layout>
     );
   }
@@ -74,141 +82,225 @@ export function ProfileDetailPage() {
   if (!profileData) {
     return (
       <Layout title={`@${username}`}>
-        <p className="text-black mb-4 font-medium">
-          Could not load profile details for {username}
-        </p>
-        <Link to="/" className="text-black underline flex items-center gap-1">
-          <FiArrowLeft size={16} /> Back to search
-        </Link>
+        <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
+          <p className="text-zinc-400 font-medium">
+            Could not find profile details for creator <span className="text-indigo-400">@{username}</span>
+          </p>
+          <Link to="/" className="secondary-button mt-2">
+            <FiArrowLeft size={16} /> Back to search
+          </Link>
+        </div>
       </Layout>
     );
   }
 
   const user: FullUserProfile = profileData.data.user_profile;
 
+  const handleToggleList = () => {
+    if (isSelected) {
+      removeProfileFromList(user.user_id);
+    } else {
+      addProfileToList({
+        user_id: user.user_id,
+        username: user.username,
+        fullname: user.fullname,
+        picture: user.picture,
+        followers: user.followers,
+        platform: platform,
+        is_verified: user.is_verified,
+      });
+    }
+  };
+
+  const getPlatformIcon = () => {
+    switch (platform) {
+      case "instagram":
+        return <FaInstagram className="text-pink-500" size={18} />;
+      case "youtube":
+        return <FaYoutube className="text-red-500" size={18} />;
+      case "tiktok":
+        return <FaTiktok className="text-cyan-400" size={16} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Layout title={user.fullname}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4 }}
+        className="w-full flex flex-col items-start -mt-5"
       >
         <Link
           to="/"
-          className="text-sm text-black mb-6 inline-flex items-center gap-1 hover:opacity-70 transition-opacity font-medium"
+          className="text-sm text-zinc-500 hover:text-zinc-300 mb-8 inline-flex items-center gap-1.5 transition-colors font-medium"
         >
-          <FiArrowLeft size={16} /> Back to search
+          <FiArrowLeft size={16} /> Back to discovery
         </Link>
 
+        {/* Profile Card Main */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.3 }}
-          className="flex gap-6 items-start text-left max-w-2xl mx-auto border-2 border-black p-6 rounded"
+          transition={{ delay: 0.1, duration: 0.4 }}
+          className="w-full bg-zinc-900/30 border border-zinc-800/80 p-6 md:p-8 rounded-2xl flex flex-col md:flex-row gap-8 items-center md:items-start text-left backdrop-blur-md relative overflow-hidden"
         >
-          <motion.img
-            src={user.picture}
-            className="w-24 h-24 rounded-full border-2 border-black flex-shrink-0"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.2 }}
-          />
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold text-black">
-              @{user.username}
-              <VerifiedBadge verified={user.is_verified} />
-            </h2>
-            <p className="text-black text-sm mt-1">{user.fullname}</p>
-            <p className="text-xs text-black mt-1 font-medium">Platform: {platform}</p>
+          {/* Ambient Glow */}
+          <div className="absolute -top-12 -left-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl" />
+
+          {/* Picture */}
+          <div className="relative flex-shrink-0">
+            <motion.img
+              src={user.picture}
+              alt={user.fullname}
+              className="w-24 h-24 md:w-28 md:h-28 rounded-full border-2 border-zinc-800 object-cover shadow-xl"
+              whileHover={{ scale: 1.03 }}
+              transition={{ duration: 0.2 }}
+            />
+            <div className="absolute -bottom-2 -right-2 bg-zinc-950 p-1 rounded-full border border-zinc-800">
+              <div className="w-7 h-7 rounded-full flex items-center justify-center bg-zinc-900 text-sm">
+                {getPlatformIcon()}
+              </div>
+            </div>
+          </div>
+
+          {/* Details */}
+          <div className="flex-1 w-full min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-extrabold text-zinc-100 flex items-center gap-1.5">
+                  @{user.username}
+                  <VerifiedBadge verified={user.is_verified} />
+                </h2>
+                <p className="text-sm text-zinc-400 mt-0.5">{user.fullname}</p>
+                <div className="flex gap-2 items-center mt-2.5">
+                  <span className="px-2.5 py-0.5 rounded-lg bg-zinc-850 border border-zinc-800 text-xs text-zinc-400 capitalize font-semibold flex items-center gap-1.5">
+                    {platform === "youtube" ? "YouTube" : platform}
+                  </span>
+                  {user.is_business && (
+                    <span className="px-2.5 py-0.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-400 font-semibold">
+                      Business Account
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
 
             {user.description && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.3 }}
-                className="mt-4 text-sm text-black"
-              >
+              <p className="mt-5 text-sm leading-relaxed text-zinc-300 border-t border-zinc-850/60 pt-4">
                 {user.description}
-              </motion.p>
+              </p>
             )}
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.3 }}
-              className="mt-6 grid grid-cols-2 gap-3 text-sm"
-            >
-              <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                <div className="text-black text-xs font-medium">Followers</div>
-                <div className="font-bold text-lg">
+            {/* Profile Statistics Grid */}
+            <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {/* Followers */}
+              <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <FiUsers size={12} className="text-zinc-500" /> Followers
+                </span>
+                <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
                   {formatFollowersDetail(user.followers)}
-                </div>
+                </span>
               </div>
-              <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                <div className="text-black text-xs font-medium">Engagement Rate</div>
-                <div className="font-bold text-lg">
-                  {user.engagement_rate !== undefined
-                    ? (user.engagement_rate * 10000).toFixed(2) + "%"
-                    : "N/A"}
-                </div>
+
+              {/* Engagement Rate */}
+              <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <FiBarChart2 size={12} className="text-zinc-500" /> Eng. Rate
+                </span>
+                <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
+                  {formatEngagementRate(user.engagement_rate)}
+                </span>
               </div>
+
+              {/* Posts Count */}
               {user.posts_count !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                  <div className="text-black text-xs font-medium">Posts</div>
-                  <div className="font-bold text-lg">{user.posts_count}</div>
+                <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <FiTv size={12} className="text-zinc-500" /> Posts
+                  </span>
+                  <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
+                    {user.posts_count}
+                  </span>
                 </div>
               )}
-              {user.avg_likes !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                  <div className="text-black text-xs font-medium">Avg Likes</div>
-                  <div className="font-bold text-lg">
-                    {formatFollowersDetail(user.avg_likes)}
-                  </div>
-                </div>
-              )}
-              {user.avg_comments !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                  <div className="text-black text-xs font-medium">Avg Comments</div>
-                  <div className="font-bold text-lg">{user.avg_comments}</div>
-                </div>
-              )}
-              {user.avg_views !== undefined && user.avg_views > 0 && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                  <div className="text-black text-xs font-medium">Avg Views</div>
-                  <div className="font-bold text-lg">
-                    {formatFollowersDetail(user.avg_views)}
-                  </div>
-                </div>
-              )}
+
+              {/* Engagements */}
               {user.engagements !== undefined && (
-                <div className="border-2 border-black p-3 rounded bg-white hover:border-blue-600 transition-all">
-                  <div className="text-black text-xs font-medium">Engagements</div>
-                  <div className="font-bold text-lg">
-                    {formatEngagementRate(user.engagement_rate)}
-                  </div>
+                <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <FiHeart size={12} className="text-zinc-500" /> Engagements
+                  </span>
+                  <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
+                    {formatFollowersDetail(user.engagements)}
+                  </span>
                 </div>
               )}
-            </motion.div>
 
-            {user.url && (
-              <motion.a
-                href={user.url}
-                target="_blank"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.2 }}
-                className="inline-flex items-center gap-2 mt-6 px-4 py-2 bg-black text-white rounded border-2 border-black hover:border-blue-600 transition-all font-medium"
+              {/* Avg Likes */}
+              {user.avg_likes !== undefined && (
+                <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <FiThumbsUp size={12} className="text-zinc-500" /> Avg Likes
+                  </span>
+                  <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
+                    {formatFollowersDetail(user.avg_likes)}
+                  </span>
+                </div>
+              )}
+
+              {/* Avg Views */}
+              {user.avg_views !== undefined && user.avg_views > 0 && (
+                <div className="bg-zinc-900/40 border border-zinc-800/80 p-4 rounded-xl hover:border-zinc-700/60 transition-all flex flex-col justify-between">
+                  <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider flex items-center gap-1.5">
+                    <FiEye size={12} className="text-zinc-500" /> Avg Views
+                  </span>
+                  <span className="text-xl font-extrabold text-zinc-100 mt-2 block">
+                    {formatFollowersDetail(user.avg_views)}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Action Buttons Container */}
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 border-t border-zinc-850/60 pt-6">
+              {user.url && (
+                <a
+                  href={user.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-200 font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  View Social Profile <FiArrowRight size={16} />
+                </a>
+              )}
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleToggleList}
+                className={`flex-1 py-3 rounded-xl font-bold transition-all duration-200 cursor-pointer text-sm flex items-center justify-center gap-2 ${
+                  isSelected
+                    ? "bg-zinc-900 hover:bg-red-500/10 border border-zinc-800 hover:border-red-500/30 text-zinc-300 hover:text-red-400"
+                    : "bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/10"
+                }`}
               >
-                View on platform <FiArrowRight size={16} />
-              </motion.a>
-            )}
-
-            <motion.button
-              disabled
-              whileHover={{ scale: 1.05, y: -2 }}
-              transition={{ duration: 0.2 }}
-              className="custom-button block mt-4"
-            >
-              Add to List
-            </motion.button>
+                {isSelected ? (
+                  <>
+                    <FiCheck size={16} />
+                    Remove from List
+                  </>
+                ) : (
+                  <>
+                    <FiPlus size={16} />
+                    Add to Campaign List
+                  </>
+                )}
+              </motion.button>
+            </div>
           </div>
         </motion.div>
       </motion.div>

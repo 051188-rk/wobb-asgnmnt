@@ -1,11 +1,6 @@
 import { create } from 'zustand';
-import type { Platform, UserProfileSummary, ProfileDetailResponse } from '@/types';
-
-interface SelectedProfile {
-  user_id: string;
-  username: string;
-  platform: Platform;
-}
+import { persist, createJSONStorage } from 'zustand/middleware';
+import type { Platform, ProfileDetailResponse, SelectedProfile } from '@/types';
 
 interface AppStore {
   // Search state
@@ -38,60 +33,73 @@ interface AppStore {
   clearProfileCache: () => void;
 }
 
-export const useAppStore = create<AppStore>((set, get) => ({
-  // Initial state
-  platform: 'instagram',
-  searchQuery: '',
-  clickCount: 0,
-  selectedProfiles: [],
-  profileCache: {},
+export const useAppStore = create<AppStore>()(
+  persist(
+    (set, get) => ({
+      // Initial state
+      platform: 'instagram',
+      searchQuery: '',
+      clickCount: 0,
+      selectedProfiles: [],
+      profileCache: {},
 
-  // Platform management
-  setPlatform: (platform: Platform) => set({ platform }),
-  
-  // Search management
-  setSearchQuery: (query: string) => set({ searchQuery: query }),
-  
-  // Click tracking
-  incrementClickCount: () => set((state) => ({ clickCount: state.clickCount + 1 })),
-  resetClickCount: () => set({ clickCount: 0 }),
-  
-  // Selected profiles management
-  addProfileToList: (profile: SelectedProfile) =>
-    set((state) => ({
-      selectedProfiles: [
-        ...state.selectedProfiles.filter((p) => p.user_id !== profile.user_id),
-        profile,
-      ],
-    })),
-  
-  removeProfileFromList: (userId: string) =>
-    set((state) => ({
-      selectedProfiles: state.selectedProfiles.filter((p) => p.user_id !== userId),
-    })),
-  
-  isProfileSelected: (userId: string) => {
-    const state = get();
-    return state.selectedProfiles.some((p) => p.user_id === userId);
-  },
-  
-  clearSelectedProfiles: () => set({ selectedProfiles: [] }),
-  
-  getSelectedProfiles: () => get().selectedProfiles,
-  
-  // Profile cache management
-  cacheProfile: (username: string, data: ProfileDetailResponse) =>
-    set((state) => ({
-      profileCache: {
-        ...state.profileCache,
-        [username]: data,
+      // Platform management
+      setPlatform: (platform: Platform) => set({ platform }),
+      
+      // Search management
+      setSearchQuery: (query: string) => set({ searchQuery: query }),
+      
+      // Click tracking
+      incrementClickCount: () => set((state) => ({ clickCount: state.clickCount + 1 })),
+      resetClickCount: () => set({ clickCount: 0 }),
+      
+      // Selected profiles management
+      addProfileToList: (profile: SelectedProfile) =>
+        set((state) => {
+          const filtered = state.selectedProfiles.filter((p) => p.user_id !== profile.user_id);
+          return {
+            selectedProfiles: [...filtered, profile],
+          };
+        }),
+      
+      removeProfileFromList: (userId: string) =>
+        set((state) => ({
+          selectedProfiles: state.selectedProfiles.filter((p) => p.user_id !== userId),
+        })),
+      
+      isProfileSelected: (userId: string) => {
+        const state = get();
+        return state.selectedProfiles.some((p) => p.user_id === userId);
       },
-    })),
-  
-  getCachedProfile: (username: string) => {
-    const state = get();
-    return state.profileCache[username];
-  },
-  
-  clearProfileCache: () => set({ profileCache: {} }),
-}));
+      
+      clearSelectedProfiles: () => set({ selectedProfiles: [] }),
+      
+      getSelectedProfiles: () => get().selectedProfiles,
+      
+      // Profile cache management
+      cacheProfile: (username: string, data: ProfileDetailResponse) =>
+        set((state) => ({
+          profileCache: {
+            ...state.profileCache,
+            [username]: data,
+          },
+        })),
+      
+      getCachedProfile: (username: string) => {
+        const state = get();
+        return state.profileCache[username];
+      },
+      
+      clearProfileCache: () => set({ profileCache: {} }),
+    }),
+    {
+      name: 'wobb-influencer-list',
+      storage: createJSONStorage(() => localStorage),
+      // Only persist the selectedProfiles array
+      partialize: (state) => ({
+        selectedProfiles: state.selectedProfiles,
+      }) as any,
+    }
+  )
+);
+

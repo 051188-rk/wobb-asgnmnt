@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import type { Platform } from "@/types";
 import { Layout } from "@/components/Layout";
 import { PlatformFilter } from "@/components/PlatformFilter";
@@ -29,10 +28,10 @@ export function SearchPage() {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.3 }}
-        className="text-black mb-6 text-sm font-medium"
+        transition={{ delay: 0.1, duration: 0.3 }}
+        className="text-zinc-400 mb-8 text-sm font-medium -mt-5"
       >
-        Browse top creators across social platforms
+        Browse and discover top creators across social media networks.
       </motion.p>
 
       <PlatformFilter
@@ -45,14 +44,19 @@ export function SearchPage() {
         onSearchChange={setSearchQuery}
       />
 
-      <motion.p
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.3 }}
-        className="text-xs text-black mb-4 font-medium"
+        transition={{ delay: 0.2, duration: 0.3 }}
+        className="w-full flex justify-between items-center text-xs text-zinc-500 mb-6 font-semibold uppercase tracking-wider border-b border-zinc-900 pb-3"
       >
-        Showing {filtered.length} of {allProfiles.length} on {platform}
-      </motion.p>
+        <span>
+          Showing {filtered.length} of {allProfiles.length} on {platform}
+        </span>
+        <span className="text-zinc-600 normal-case">
+          Clicks: {clickCount}
+        </span>
+      </motion.div>
 
       <ProfileList
         profiles={filtered}

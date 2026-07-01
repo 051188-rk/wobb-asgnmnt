@@ -9,12 +9,13 @@ export function VerifiedBadge({ verified }: VerifiedBadgeProps) {
   if (!verified) return null;
   return (
     <motion.span
-      initial={{ opacity: 0, scale: 0.8 }}
+      initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.3 }}
-      className="ml-1 inline-flex"
+      className="inline-flex align-middle ml-1"
+      title="Verified Account"
     >
-      <MdVerified size={16} className="text-blue-600" />
+      <MdVerified size={16} className="text-sky-400" />
     </motion.span>
   );
 }
